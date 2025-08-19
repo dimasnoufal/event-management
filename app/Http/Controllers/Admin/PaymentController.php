@@ -13,7 +13,10 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $payments = Payment::with('registration.user', 'registration.event')->latest()->paginate(15);
+        $payments = Payment::with(['registration.user','registration.event'])
+            ->latest()
+            ->paginate(15);
+
         return view('admin.payments.index', compact('payments'));
     }
 

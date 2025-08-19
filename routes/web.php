@@ -7,25 +7,20 @@ use App\Http\Controllers\Admin\RegistrationController as AdminRegistrationContro
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\DashboadController as DashboardController;
 
-Route::get('/', function () {
-     return view('welcome');
-});
+// Route::get('/', function () {
+//      return view('welcome');
+// });
 
-Route::get('login', [AdminUserController::class, 'showLoginForm'])->name('login');
-Route::post('login', [AdminUserController::class, 'login']);
+Route::get('/', [AdminUserController::class, 'showLoginForm'])->name('login');
+Route::post('/', [AdminUserController::class, 'login']);
 Route::post('logout', [AdminUserController::class, 'logout'])->name('logout');
 
 
-Route::middleware(['auth', 'is_admin'])
-     ->prefix('admin')
-     ->name('admin.')
+Route::middleware(['web', 'is_admin']) 
      ->group(function () {
-          Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-          Route::resource('events', AdminEventController::class)
-               ->except(['create', 'store', 'edit', 'update', 'destroy']);
-          Route::resource('users', AdminUserController::class);
-          Route::resource('registrations', AdminRegistrationController::class)
-               ->only(['index', 'show', 'destroy']);
-          Route::resource('payments', AdminPaymentController::class)
-               ->only(['index', 'show', 'update']);
+          Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+          Route::resource('admin/events', \App\Http\Controllers\Admin\EventController::class);
+          Route::resource('admin/users', \App\Http\Controllers\Admin\UserController::class);
+          Route::resource('admin/registrations', \App\Http\Controllers\Admin\RegistrationController::class);
+          Route::resource('admin/payments', \App\Http\Controllers\Admin\PaymentController::class);
      });

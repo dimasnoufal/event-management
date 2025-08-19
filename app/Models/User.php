@@ -32,13 +32,12 @@ class User extends Authenticatable
         ];
     }
 
-    public function registrations()
-    {
-        return $this->hasMany(Registration::class);
-    }
+    public function registrations() { return $this->hasMany(Registration::class); }
 
     public function events()
     {
         return $this->belongsToMany(Event::class, 'registrations');
     }
+
+    // public function devices() { return $this->hasMany(UserDevice::class); }
 }

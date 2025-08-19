@@ -9,6 +9,11 @@ class Event extends Model
 {
     use HasFactory;
 
+    public const STATUS_SCHEDULED = 'scheduled';
+    public const STATUS_ONGOING   = 'ongoing';
+    public const STATUS_COMPLETED = 'completed';
+    public const STATUS_CANCELLED = 'cancelled';
+
     protected $fillable = [
         'title',
         'description',

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Event;
+use App\Helper\ResponseFormatter;
+use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
@@ -13,7 +15,34 @@ class EventController extends Controller
      */
     public function index()
     {
-        return Event::where('status', 'active')->orderBy('event_date')->get();
+
+        try {
+            $events = Event::query()
+                ->whereIn('status', ['scheduled', 'ongoing']) 
+                ->latest('event_date')
+                ->get();
+
+            if ($events->isEmpty()) {
+                return ResponseFormatter::success(
+                    [],
+                    'Tidak ada events mendatang'
+                );
+            }
+
+            return ResponseFormatter::success(
+                $events,
+                'Events mendatang berhasil diambil'
+            );
+
+        } catch (\Exception $e) {
+            Log::error('Error fetching upcoming events: ' . $e->getMessage());
+            
+            return ResponseFormatter::error(
+                null,
+                'Gagal mengambil events mendatang',
+                500
+            );
+        }
     }
 
     /**

@@ -14,5 +14,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('events', EventController::class) ->only(['index', 'show']);
     Route::apiResource('registrations', RegistrationController::class) ->only(['store']);
     Route::apiResource('payments', PaymentController::class) ->only(['store']);
-    Route::post('payments/webhook', [PaymentController::class, 'webhook'])->withoutMiddleware('auth:sanctum');   
 });
+
+Route::post('/payments/webhook', [PaymentController::class, 'webhook']);
