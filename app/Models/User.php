@@ -39,5 +39,5 @@ class User extends Authenticatable
         return $this->belongsToMany(Event::class, 'registrations');
     }
 
-    // public function devices() { return $this->hasMany(UserDevice::class); }
+    public function devices() { return $this->hasMany(UserDevice::class); }
 }

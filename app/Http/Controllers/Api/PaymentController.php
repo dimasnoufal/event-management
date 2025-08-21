@@ -12,6 +12,7 @@ use App\Services\PaymentService;
 use App\Models\Registration;
 use App\Helper\ResponseFormatter;
 use Illuminate\Support\Facades\Log;
+use App\Services\NotificationService;
 
 class PaymentController extends Controller
 {
@@ -161,6 +162,29 @@ class PaymentController extends Controller
                 ]);
             }
         });
+
+        if ($newStatus === 'success' && $payment->registration && $payment->registration->user) {
+        $user   = $payment->registration->user;
+        $tokens = $user->devices()->pluck('device_token')->all(); 
+
+        if (!empty($tokens)) {
+            try {
+                $notif = app(NotificationService::class);
+                $notif->sendToMany(
+                    $tokens,
+                    'Pembayaran Berhasil',
+                    'Order '.$payment->external_order_id.' telah sukses.',
+                    [
+                        'order_id' => $payment->external_order_id,
+                        'amount'   => (string) $payment->amount,
+                        'status'   => 'success',
+                    ]
+                );
+            } catch (\Throwable $e) {
+                Log::error('FCM send failed', ['error' => $e->getMessage()]);
+            }
+        }
+    }
 
         return ResponseFormatter::success(null, 'Webhook processed', 200);
     }
