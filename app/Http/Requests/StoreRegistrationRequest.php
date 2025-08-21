@@ -22,7 +22,9 @@ class StoreRegistrationRequest extends FormRequest
     public function rules()
     {
         return [
+            'user_id' => ['required', 'exists:users,id', 'integer'],
             'event_id' => ['required', 'exists:events,id', 'integer'],
+            'registration_date' => ['sometimes', 'date'],
             'payment_status' => ['sometimes', 'in:pending,paid,failed'],
         ];
     }
@@ -35,10 +37,12 @@ class StoreRegistrationRequest extends FormRequest
     public function messages()
     {
         return [
-            'event_id.required' => 'Event harus dipilih.',
-            'event_id.exists' => 'Event yang dipilih tidak valid.',
-            'event_id.integer' => 'ID Event harus berupa angka.',
-            'payment_status.in' => 'Status pembayaran hanya boleh "pending", "paid", atau "failed".',
+            'user_id.required' => 'User ID is required.',
+            'user_id.exists' => 'Selected user does not exist.',
+            'event_id.required' => 'Event ID is required.',
+            'event_id.exists' => 'Selected event does not exist.',
+            'registration_date.date' => 'Registration date must be a valid date.',
+            'payment_status.in' => 'Payment status must be pending, paid, or failed.',
         ];
     }
 
@@ -50,7 +54,9 @@ class StoreRegistrationRequest extends FormRequest
     public function attributes()
     {
         return [
+            'user_id' => 'User',
             'event_id' => 'Event',
+            'registration_date' => 'Tanggal Registrasi',
             'payment_status' => 'Status Pembayaran',
         ];
     }

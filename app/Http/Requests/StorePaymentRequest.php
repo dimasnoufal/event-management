@@ -22,10 +22,7 @@ class StorePaymentRequest extends FormRequest
     public function rules()
     {
         return [
-            'registration_id' => ['required', 'exists:registrations,id', 'numeric'],
-            'amount' => ['required', 'numeric', 'min:0.01'],
-            'payment_method' => ['required', 'in:credit_card,paypal,bank_transfer'], 
-            'payment_status' => ['required', 'in:pending,success,failed'],
+            'registration_id' => ['required','integer','exists:registrations,id'],
         ];
     }
 

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 
 @section('content')
     <div class="container">
@@ -19,7 +19,6 @@
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->role }}</td>
                         <td>
-                            <a href="{{ route('admin.users.show', $user) }}" class="btn btn-sm btn-info">View</a>
                             <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 
 @section('content')
     <div class="container">
@@ -24,11 +24,6 @@
                         <td>{{ $payment->payment_status }}</td>
                         <td>
                             <a href="{{ route('admin.payments.show', $payment) }}" class="btn btn-sm btn-info">View</a>
-                            <form action="{{ route('admin.payments.update', $payment) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('PUT')
-                                <button class="btn btn-sm btn-warning">Update Status</button>
-                            </form>
                         </td>
                     </tr>
                 @endforeach

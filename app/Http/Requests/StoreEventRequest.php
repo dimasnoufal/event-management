@@ -22,13 +22,13 @@ class StoreEventRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required','string','max:255'],
+            'title'       => ['required','string','max:255'],
             'description' => ['nullable','string'],
-            'date'  => ['required','date','after:today'],
-            'location' => ['nullable','string','max:255'],
-            'organizer' => ['required','string','max:255'],
-            'price' => ['required','numeric','min:0'],
-            'status' => ['required','string','in:scheduled,ongoing,completed,cancelled'],
+            'date'        => ['required','date'], 
+            'location'    => ['nullable','string','max:255'],
+            'organizer'   => ['required','string','max:255'],
+            'price'       => ['required','numeric','min:0'],  
+            'status'      => ['required','in:scheduled,ongoing,completed,cancelled'], 
         ];
     }
 
@@ -65,16 +65,15 @@ class StoreEventRequest extends FormRequest
      *
      * @return array
      */
-    public function attributes()
+    public function attributes(): array
     {
         return [
-            'title' => 'Judul Event',
-            'description' => 'Deskripsi Event',
-            'date' => 'Tanggal Event',
-            'location' => 'Lokasi Event',
-            'organizer' => 'Nama Penyelenggara',
-            'price' => 'Harga Event',
-            'status' => 'Status Event',
+            'title'     => 'Judul Event',
+            'date'      => 'Tanggal/Waktu Event',
+            'location'  => 'Lokasi Event',
+            'organizer' => 'Penyelenggara',
+            'price'     => 'Harga',
+            'status'    => 'Status',
         ];
     }
 }

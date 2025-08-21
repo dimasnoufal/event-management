@@ -14,6 +14,8 @@ class Payment extends Model
         'amount',
         'payment_method',
         'payment_status',
+        'external_order_id',
+        'redirect_url',
     ];
 
     protected function casts(): array

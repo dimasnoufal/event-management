@@ -17,8 +17,9 @@ class Event extends Model
     protected $fillable = [
         'title',
         'description',
-        'event_date',
-        'venue',
+        'date',
+        'location',
+        'organizer',
         'price',
         'status',
     ];
@@ -26,7 +27,7 @@ class Event extends Model
     protected function casts(): array
     {
         return [
-            'event_date' => 'date',
+            'date' => 'datetime',
             'price' => 'decimal:2',
         ];
     }

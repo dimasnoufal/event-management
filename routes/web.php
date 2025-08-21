@@ -16,11 +16,10 @@ Route::post('/', [AdminUserController::class, 'login']);
 Route::post('logout', [AdminUserController::class, 'logout'])->name('logout');
 
 
-Route::middleware(['web', 'is_admin']) 
-     ->group(function () {
-          Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-          Route::resource('admin/events', \App\Http\Controllers\Admin\EventController::class);
-          Route::resource('admin/users', \App\Http\Controllers\Admin\UserController::class);
-          Route::resource('admin/registrations', \App\Http\Controllers\Admin\RegistrationController::class);
-          Route::resource('admin/payments', \App\Http\Controllers\Admin\PaymentController::class);
-     });
+Route::prefix('admin')->name('admin.')->middleware(['web','is_admin'])->group(function () {
+     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+     Route::resource('events', AdminEventController::class);
+     Route::resource('users', AdminUserController::class);
+     Route::resource('registrations', AdminRegistrationController::class);
+     Route::resource('payments', AdminPaymentController::class);
+});

@@ -13,11 +13,11 @@ class RegistrationController extends Controller
      */
     public function index()
     {
-        $regs = Registration::with(['user','event','payment'])
+        $registrations = Registration::with(['user','event','payment'])
             ->latest()
             ->paginate(15);
 
-        return view('admin.registrations.index', compact('regs'));
+        return view('admin.registrations.index', compact('registrations'));
     }
 
     /**

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 
 @section('content')
     <div class="container">
@@ -14,15 +14,15 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($registrations as $registration)
+                @foreach($registrations as $reg)
                     <tr>
-                        <td>{{ $registration->user->name }}</td>
-                        <td>{{ $registration->event->title }}</td>
-                        <td>{{ $registration->registration_date }}</td>
-                        <td>{{ $registration->payment_status }}</td>
+                        <td>{{ $reg->user->name }}</td>
+                        <td>{{ $reg->event->title }}</td>
+                        <td>{{ $reg->registration_date }}</td>
+                        <td>{{ $reg->payment_status }}</td>
                         <td>
-                            <a href="{{ route('admin.registrations.show', $registration) }}" class="btn btn-sm btn-info">View</a>
-                            <form action="{{ route('admin.registrations.destroy', $registration) }}" method="POST" class="d-inline">
+                            <a href="{{ route('admin.registrations.show', $reg) }}" class="btn btn-sm btn-info">View</a>
+                            <form action="{{ route('admin.registrations.destroy', $reg) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-sm btn-danger" onclick="return confirm('Delete this registration?')">Delete</button>

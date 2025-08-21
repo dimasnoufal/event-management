@@ -13,12 +13,41 @@ class MidtransService
      */
     public function __construct()
     {
-        // Set up Midtrans configuration
-        Config::$serverKey = env('MIDTRANS_SERVER_KEY');
-        Config::$clientKey = env('MIDTRANS_CLIENT_KEY');
-        Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);  // Set to true for production
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
+        Config::$isProduction = (bool) env('MIDTRANS_IS_PRODUCTION', false);
+        Config::$serverKey    = env('MIDTRANS_SERVER_KEY');
+        Config::$isSanitized  = true;
+        Config::$is3ds        = true;
+
+        $caPath = storage_path('app/certs/cacert.pem'); 
+        $opts = [];
+
+        if (is_file($caPath)) {
+            $opts[CURLOPT_CAINFO]         = $caPath;
+            $opts[CURLOPT_SSL_VERIFYPEER] = true;
+            $opts[CURLOPT_SSL_VERIFYHOST] = 2;
+        }
+
+        if (!isset($opts[CURLOPT_HTTPHEADER])) {
+            $opts[CURLOPT_HTTPHEADER] = [];
+        }
+
+        Config::$curlOptions = array_replace(Config::$curlOptions ?? [], $opts);
+    }
+
+    /**
+     * Membuat transaksi Snap Midtrans dan mendapatkan response object.
+     *
+     * @param array $params Parameter transaksi yang diperlukan untuk Snap
+     * @return object Response object dari Midtrans Snap transaction
+     * @throws \Exception Jika terjadi kesalahan dalam pembuatan transaksi Snap
+     */
+    public function createSnap(array $params): object
+    {
+        try {
+            return Snap::createTransaction($params); 
+        } catch (\Exception $e) {
+            throw new \Exception('Error creating Snap transaction with Midtrans: '.$e->getMessage());
+        }
     }
 
     /**
@@ -27,16 +56,12 @@ class MidtransService
      * @param array $transactionDetails
      * @return string
      */
-    public function createTransaction(array $transactionDetails)
+    public function createTransaction(array $params): string
     {
         try {
-            // Mendapatkan snap token
-            $snapToken = Snap::getSnapToken($transactionDetails);
-
-            return $snapToken;
+            return Snap::getSnapToken($params);
         } catch (\Exception $e) {
-            // Tangani jika ada kesalahan dalam pembuatan transaksi
-            throw new \Exception('Error creating transaction with Midtrans: ' . $e->getMessage());
+            throw new \Exception('Error creating transaction with Midtrans: '.$e->getMessage());
         }
     }
 
@@ -49,10 +74,9 @@ class MidtransService
     public function checkPaymentStatus($orderId)
     {
         try {
-            $status = Transaction::status($orderId);
-            return $status;
+            return Transaction::status($orderId);
         } catch (\Exception $e) {
-            throw new \Exception('Error checking payment status: ' . $e->getMessage());
+            throw new \Exception('Error checking payment status: '.$e->getMessage());
         }
     }
 }

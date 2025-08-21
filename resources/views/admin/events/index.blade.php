@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 
 @section('content')
     <div class="container">
@@ -18,11 +18,9 @@
                 @foreach($events as $event)
                     <tr>
                         <td>{{ $event->title }}</td>
-                        <td>{{ $event->event_date->format('d M Y') }}</td>
+                        <td>{{ $event->date ? $event->date->format('Y-m-d H:i:s') : '-' }}</td>
                         <td>{{ number_format($event->price, 2) }}</td>
-                        <td>
-                            <span class="badge badge-{{ $event->status === 'active' ? 'success' : 'secondary' }}">{{ $event->status }}</span>
-                        </td>
+                        <td>{{ $event->status }}</td>
                         <td>
                             <a href="{{ route('admin.events.edit', $event) }}" class="btn btn-sm btn-warning">Edit</a>
                             <form action="{{ route('admin.events.destroy', $event) }}" method="POST" class="d-inline">
