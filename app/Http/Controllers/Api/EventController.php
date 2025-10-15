@@ -19,7 +19,7 @@ class EventController extends Controller
         try {
             $events = Event::query()
                 ->whereIn('status', ['scheduled', 'ongoing']) 
-                ->latest('event_date')
+                ->latest('date')
                 ->get();
 
             if ($events->isEmpty()) {
@@ -58,8 +58,29 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        abort_unless($event->status === 'active', 404);
-        return $event;
+        try {
+            if (!in_array($event->status, ['scheduled', 'ongoing', 'active'])) {
+                return ResponseFormatter::error(
+                    null,
+                    'Event tidak tersedia atau sudah berakhir',
+                    404
+                );
+            }
+
+            return ResponseFormatter::success(
+                $event,
+                'Event berhasil diambil'
+            );
+
+        } catch (\Exception $e) {
+            Log::error('Error fetching event ID: ' . $event->id . ' - ' . $e->getMessage());
+            
+            return ResponseFormatter::error(
+                null,
+                'Gagal mengambil event dengan ID: ' . $event->id,
+                500
+            );
+        }
     }
 
     /**

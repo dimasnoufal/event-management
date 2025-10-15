@@ -20,6 +20,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('devices/unregister', [UserDeviceController::class, 'unregister']);
 
     Route::apiResource('events', EventController::class) ->only(['index', 'show']);
-    Route::apiResource('registrations', RegistrationController::class) ->only(['store']);
+
+    Route::get('registrations/user/{userId}', [RegistrationController::class, 'getByUserId']);
+    Route::apiResource('registrations', RegistrationController::class) ->only(['index', 'store', 'show',]);
+    
     Route::apiResource('payments', PaymentController::class) ->only(['store']);
 });
